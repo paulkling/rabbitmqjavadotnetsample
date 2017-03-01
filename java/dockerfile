@@ -1,0 +1,13 @@
+FROM java:8-jdk
+COPY gradle /usr/src/myapp/gradle
+COPY g* /usr/src/myapp/
+WORKDIR /usr/src/myapp
+RUN ./gradlew
+COPY build.gradle /usr/src/myapp/build.gradle 
+RUN ./gradlew downloadDependencies
+
+ENV RABBITMQ-HOST=192.168.0.4
+COPY . /usr/src/myapp
+
+RUN ./gradlew build -x test
+CMD ./gradlew bootRun
